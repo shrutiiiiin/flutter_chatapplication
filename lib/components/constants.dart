@@ -8,7 +8,7 @@ const TextFieldDecoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(32)),
   ),
   enabledBorder: OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.grey, width: 1),
+    borderSide: BorderSide(color: Colors.white, width: 1),
     borderRadius: BorderRadius.all(Radius.circular(20)),
   ),
   focusedBorder: OutlineInputBorder(

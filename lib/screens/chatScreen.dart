@@ -54,30 +54,41 @@ class _chatScreenState extends State<chatScreen> {
         ],
       ),
       body: Column(
-
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 30, left: 10),
-                child: TextField(
-                  onChanged: (value){
-                    messageText = value;
-                  },
-                  decoration: TextFieldDecoration,
-
+          Expanded(
+            child: Container(),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    onChanged: (value) {
+                      messageText = value;
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Send your message here',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
                 ),
-              ),
-              TextButton(onPressed:(){
-                _firestore.collection('messages').add({
-                  'text': messageText,
-                  'sender': loggedInUser.email
-                });
-              }, child: Text('Send',style: TextStyle(fontSize: 14, color: Colors.white),))
-            ],
-          )
-
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    _firestore.collection('messages').add({
+                      'text': messageText,
+                      'sender': loggedInUser.email,
+                    });
+                  },
+                  child: Text(
+                    'Send',
+                    style: TextStyle(fontSize: 14, color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
