@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:chatapplication/components/constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -30,6 +31,11 @@ class _chatScreenState extends State<chatScreen> {
       loggedInUser = user ;
     }
   }
+ void messageStream()async {
+    await for (var snapshot in _firestore.collection('messages').snapshots()){
+      for ( var message in snapshot.docs);
+    }
+ }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +62,30 @@ class _chatScreenState extends State<chatScreen> {
       body: Column(
         children: [
           Expanded(
-            child: Container(),
+            child:StreamBuilder(
+              stream: _firestore.collection('messages').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final messages = snapshot.data!.docs;
+                  List<Widget> messageWidgets = [];
+                  for (var message in messages) {
+                    final messageText = message['text'];
+                    final messageSender = message['sender'];
+
+                    final messageWidget = Text('$messageSender: $messageText');
+                    messageWidgets.add(messageWidget);
+                  }
+
+                  return ListView(
+                    children: messageWidgets,
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(10.0),
