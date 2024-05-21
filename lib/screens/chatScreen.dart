@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 final _firestore = FirebaseFirestore.instance;
-
+late User loggedInUser;
 class chatScreen extends StatefulWidget {
   static String id = 'chat_screen';
   const chatScreen({super.key});
@@ -18,7 +18,7 @@ class chatScreen extends StatefulWidget {
 class _chatScreenState extends State<chatScreen> {
   final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
-  late User loggedInUser;
+
   late String messageText;
   @override
   void initState() {
@@ -113,8 +113,11 @@ class messageStream extends StatelessWidget {
             for (var message in messages) {
               final messageText = message['text'];
               final messageSender = message['sender'];
+              final currentUser = loggedInUser.email;
+              if(messageSender == currentUser){
 
-              final messageWidget = messageBubble(text: messageText, sender: messageSender);
+              }
+              final messageWidget = messageBubble(text: messageText, sender: messageSender, isMe: currentUser == messageSender,);
               messageBubbles.add(messageWidget);
             }
 
@@ -135,24 +138,25 @@ class messageStream extends StatelessWidget {
 class messageBubble extends StatelessWidget {
   String text;
   String sender;
-   messageBubble({super.key,required this.text, required this.sender });
+  bool isMe;
+   messageBubble({super.key,required this.text, required this.sender, required this.isMe });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Text(sender, style: TextStyle(fontSize: 12, color: Colors.white54),),
           Material
             (
               elevation: 5,
-              borderRadius: BorderRadius.circular(30),
-              color: Colors.blueAccent,
+              borderRadius: isMe ? BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30), bottomRight: Radius.circular(30)) : BorderRadius.only(topRight: Radius.circular(30), bottomRight: Radius.circular(30), bottomLeft: Radius.circular(30)),
+              color: isMe ? Colors.blueAccent : Colors.white,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                child: Text('$text'),
+                child: Text('$text', style: TextStyle(color: isMe? Colors.white : Colors.black),),
               ),
           ),
         ],
