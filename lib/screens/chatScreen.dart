@@ -1,5 +1,3 @@
-import 'dart:math';
-import 'package:chatapplication/components/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -50,6 +48,7 @@ class _chatScreenState extends State<chatScreen> {
         actions: [
           IconButton(
             onPressed: () {
+              _auth.signOut();
               Navigator.pop(context);
             },
             icon: Icon(Icons.close),
@@ -108,7 +107,7 @@ class messageStream extends StatelessWidget {
         stream: _firestore.collection('messages').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            final messages = snapshot.data!.docs;
+            final messages = snapshot.data!.docs.reversed;
             List<Widget> messageBubbles = [];
             for (var message in messages) {
               final messageText = message['text'];
@@ -122,6 +121,7 @@ class messageStream extends StatelessWidget {
             }
 
             return ListView(
+              reverse: true,
               children: messageBubbles,
             );
           } else if (snapshot.hasError) {
