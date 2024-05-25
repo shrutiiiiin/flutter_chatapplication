@@ -4,11 +4,12 @@ import 'screens/loginScreen.dart';
 import 'screens/registrationScreen.dart';
 import 'screens/WelcomeScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: FirebaseOptions(apiKey: "AIzaSyD6aa5qdsHKCNslr3HDuSK8U05x5wuM5mI", appId: "1:764691951048:android:baff6cecd163dd1190a4fd", messagingSenderId: "764691951048", projectId: "chatapplication-9c23d"),
+    options: FirebaseOptions(apiKey: dotenv.env['FIREBASE_API_KEY']!, appId: dotenv.env['FIREBASE_APP_ID']!, messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!, projectId: dotenv.env['FIREBASE_PROJECT_ID']!),
   );
   runApp( flashchat());
 }
